@@ -1,19 +1,11 @@
-import { useEffect, useRef, useState } from 'react'
+import { useState } from 'react'
+import Flow from './components/Flow'
 import './App.css'
 
 const unidade = 'UPA Dr. José Martins'
-const opcoes = [
-  ['▣', 'Escanear código do app', 'Continue a avaliação que você já começou pelo celular'],
-  ['▤', 'Digitar CPF', 'Buscar seus dados no sistema da unidade'],
-  ['✚', 'Não fiz avaliação pelo app', 'Iniciar a triagem agora, direto pelo totem'],
-]
 
 export default function App() {
   const [iniciado, setIniciado] = useState(false)
-  const [aviso, setAviso] = useState('')
-  const titulo = useRef(null)
-  useEffect(() => { if (iniciado) titulo.current?.focus() }, [iniciado])
-
   if (!iniciado) return (
     <main className="home">
       <div className="home-content">
@@ -34,31 +26,5 @@ export default function App() {
     </main>
   )
 
-  return (
-    <main className="identification">
-      <header className="header">
-        <div className="header-brand"><span>Med+Facil</span><span className="badge">TOTEM</span></div>
-        <ol className="steps" aria-label="Etapas do atendimento">
-          {['Identificação', 'Triagem', 'Sinais vitais', 'Senha'].map((step, index) => (
-            <li key={step} aria-current={index === 0 ? 'step' : undefined}><span>{index + 1}</span>{step}</li>
-          ))}
-        </ol>
-      </header>
-      <section className="identification-content" aria-labelledby="identification-title">
-        <h1 id="identification-title" ref={titulo} tabIndex={-1}>Como você quer se identificar?</h1>
-        <p className="instructions">Escolha uma das opções abaixo para continuar.</p>
-        <div className="options">
-          {opcoes.map(([icon, title, description]) => (
-            <button className="option" key={title} onClick={() => setAviso(`“${title}” estará disponível na próxima etapa do desenvolvimento.`)}>
-              <span className="option-icon" aria-hidden="true">{icon}</span>
-              <span className="option-copy"><strong>{title}</strong><span>{description}</span></span>
-              <span className="chevron" aria-hidden="true">›</span>
-            </button>
-          ))}
-        </div>
-        <p className="notice" role="status">{aviso}</p>
-        <button className="back-button" onClick={() => { setAviso(''); setIniciado(false) }}>← Voltar ao início</button>
-      </section>
-    </main>
-  )
+  return <Flow onExit={() => setIniciado(false)} />
 }
